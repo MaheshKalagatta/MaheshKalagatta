@@ -1,0 +1,81 @@
+version: 0.2
+
+env:
+  secrets-manager:
+    RAS_CLIENT_ID: "arn:aws:secretsmanager:us-east-1:235790704225:secret:a207915/ras/content-display/swaggeruser-O8E5KJ:CLIENT_ID"
+    RAS_CLIENT_SECRET: "arn:aws:secretsmanager:us-east-1:235790704225:secret:a207915/ras/content-display/swaggeruser-O8E5KJ:CLIENT_SECRET"
+    # RAS_CLIENT_ID: "arn:aws:secretsmanager:us-east-1:944063316223:secret:a207970/ras/content-display/swaggeruser-jHtBkN:CLIENT_ID"
+    # RAS_CLIENT_SECRET: "arn:aws:secretsmanager:us-east-1:944063316223:secret:a207970/ras/content-display/swaggeruser-jHtBkN:CLIENT_SECRET"
+#env:
+  #variables:
+     # key: "value"
+     # key: "value"
+  #parameter-store:
+     # key: "value"
+     # key: "value"
+  #secrets-manager:
+     # key: secret-id:json-key:version-stage:version-id
+     # key: secret-id:json-key:version-stage:version-id
+  #exported-variables:
+     # - variable
+     # - variable
+  #git-credential-helper: yes
+#batch:
+  #fast-fail: true
+  #build-list:
+  #build-matrix:
+  #build-graph:
+phases:
+  #install:
+    #If you use the Ubuntu standard image 2.0 or later, you must specify runtime-versions.
+    #If you specify runtime-versions and use an image other than Ubuntu standard image 2.0, the build fails.
+    #runtime-versions:
+      # name: version
+      # name: version
+    #commands:
+      # - command
+      # - command
+  #pre_build:
+    #commands:
+      # - command
+      # - command
+  build:
+    on-failure: ABORT
+    commands:
+      - cd $CODEBUILD_SRC_DIR
+      - ls -ltr
+      - wget https://downloads.apache.org//jmeter/binaries/apache-jmeter-5.4.1.tgz
+      - tar zxvf apache-jmeter-5.4.1.tgz
+      - cd apache-jmeter-5.4.1
+      - cd bin
+      # - ./jmeter -n -t $CODEBUILD_SRC_DIR/RecordRenditionRetrieval.jmx -Jclient_id=${RAS_CLIENT_ID} -Jclient_secret=${RAS_CLIENT_SECRET} -Jthreads=10 -Jloopcount=1
+      - sh -x jmeter.sh -n -t $CODEBUILD_SRC_DIR/RecordRenditionRetrieval.jmx -Jclient_id=${RAS_CLIENT_ID} -Jclient_secret=${RAS_CLIENT_SECRET} -Jthreads=1 -Jloopcount=1
+      # - curl -v -k https://rendition-retrieval-ci.7088.aws-int.thomsonreuters.com/actuator/health
+      # - echo "$RAS_CLIENT_ID $RAS_CLIENT_SECRET" > sec.txt
+      # - cat sec.txt
+      # - aws secretsmanager get-secret-value --secret-id arn:aws:secretsmanager:us-east-1:944063316223:secret:a207970/ras/content-display/swaggeruser-jHtBkN
+      # - apache-jmeter-5.4.1/bin/./jmeter -n -t TokenGenerator_Test.jmx -Jclient_id=${RAS_CLIENT_ID} -Jclient_secret=${RAS_CLIENT_SECRET} -Jthreads=10 -Jloopcount=1
+      # - command
+      # - command
+  #post_build:
+    #commands:
+      # - command
+      # - command
+#reports:
+  #report-name-or-arn:
+    #files:
+      # - location
+      # - location
+    #base-directory: location
+    #discard-paths: yes
+    #file-format: JunitXml | CucumberJson
+#artifacts:
+  #files:
+    # - location
+    # - location
+  #name: $(date +%Y-%m-%d)
+  #discard-paths: yes
+  #base-directory: location
+#cache:
+  #paths:
+    # - paths
